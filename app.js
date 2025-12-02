@@ -1,41 +1,35 @@
-const API = "http://localhost:3000";
+// app.js
 
-async function agregarHistoria() {
-    const titulo = document.getElementById("titulo").value;
-    const contenido = document.getElementById("contenido").value;
+console.log("App cargada correctamente.");
 
-    await fetch(API + "/agregar", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ titulo, contenido })
-    });
+// Ejemplo simple: cargar historias desde un arreglo
+const historias = [
+    {
+        titulo: "La sombra del pasillo",
+        texto: "Cada noche veía una sombra pasar, hasta que un día decidió seguirla..."
+    },
+    {
+        titulo: "El susurro en la ventana",
+        texto: "Decían que si escuchabas el susurro tres veces, no despertarías al día siguiente."
+    }
+];
 
-    alert("Historia agregada!");
-    buscar();
-}
+function cargarHistorias() {
+    const contenedor = document.getElementById("lista-historias");
 
-async function buscar() {
-    const q = document.getElementById("busqueda").value;
-    const res = await fetch(API + "/historias?q=" + q);
-    const historias = await res.json();
-
-    const lista = document.getElementById("lista");
-    lista.innerHTML = "";
+    if (!contenedor) return;
 
     historias.forEach(h => {
-        lista.innerHTML += `
-            <div style="border:1px solid #000; padding:10px; margin:10px;">
-                <h3>${h.titulo}</h3>
-                <p>${h.contenido}</p>
-                <button onclick="eliminar(${h.id})">Eliminar</button>
-            </div>
+        const card = document.createElement("div");
+        card.classList.add("historia-card");
+
+        card.innerHTML = `
+            <h3>${h.titulo}</h3>
+            <p>${h.texto}</p>
         `;
+
+        contenedor.appendChild(card);
     });
 }
 
-async function eliminar(id) {
-    await fetch(API + "/eliminar/" + id, { method: "DELETE" });
-    buscar();
-}
-
-buscar();
+document.addEventListener("DOMContentLoaded", cargarHistorias);
